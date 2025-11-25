@@ -1,0 +1,181 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Streaming</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <style>
+        /* Basic navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: #000;
+            padding: 0 20px;
+            z-index: 100;
+        }
+        .logo { color: #fff; font-size: 24px; font-weight: bold; }
+        .nav-links { display: flex; gap: 40px; }
+        .nav-links a { color: #ccc; text-decoration: none; transition: 0.3s; }
+        .nav-links a.active { color: #fff; font-weight: 600; border-bottom: 2px solid #e50914; }
+        
+        /* Hamburger */
+        .hamburger { display: none; flex-direction: column; cursor: pointer; gap: 5px; }
+        .hamburger span { width: 25px; height: 3px; background: #fff; border-radius: 2px; transition: 0.3s; }
+        .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+        @media (max-width: 768px) {
+            .hamburger { display: flex; }
+            .nav-links {
+                position: fixed; top: 0; right: -100%;
+                flex-direction: column; background: rgba(0,0,0,0.95);
+                height: 100vh; padding-top: 80px; gap: 30px;
+                transition: 0.3s;
+            }
+            .nav-links.active { right: 0; }
+        }
+
+        /* Fade in animation */
+        .fade-in { opacity: 0; transform: translateY(20px); transition: all 0.6s ease-out; }
+        .animated { opacity: 1; transform: translateY(0); }
+
+    </style>
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">STREAMING</div>
+    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+    <nav class="nav-links" id="nav-links">
+        <a href="#home" class="active">Home</a>
+        <a href="#movies">Movies</a>
+        <a href="#contact">Contact</a>
+        <a href="{% url 'logout' %}">Log Out</a>
+    </nav>
+</header>
+
+<main>
+    <!-- Home / Upcoming -->
+    <section id="home" class="upcoming">
+        <h2 class="typewriter">UPCOMING..</h2>
+        <div class="poster-grid">
+            {% for poster in upcoming %}
+            <div class="poster-card fade-in">
+                <a href="{{ poster.link }}" target="_blank"><img src="{{ poster.poster.url }}" alt="Upcoming Movie"></a>
+            </div>
+            {% empty %}<p class="fade-in">No movies available.</p>{% endfor %}
+        </div>
+    </section>
+
+    <!-- Movies -->
+    <section id="movies" class="movie_page">
+        <section class="movie-section">
+            <h2 class="fade-in">MARVEL STUDIO</h2>
+            <div class="movie-grid">
+                {% for movie in movies %}
+                <div class="movie-card fade-in">
+                <a href="{% url 'movie:movie_detail' 'marvel' movie.id %}">
+                    <img src="{{ movie.poster.url }}" alt="{{ movie.title }}">
+                </a>
+                    <h3>{{ movie.title }}</h3>
+                    <p>{{ movie.year }}</p>
+                </div>
+                {% empty %}<p class="fade-in">No movies available.</p>{% endfor %}
+            </div>
+        </section>
+        <section class="movie-section">
+            <h2 class="fade-in">DC STUDIO</h2>
+            <div class="movie-grid">
+                {% for movie in movies2 %}
+                <div class="movie-card fade-in">
+                <a href="{% url 'movie:movie_detail' 'marvel' movie.id %}">
+                    <img src="{{ movie.poster.url }}" alt="{{ movie.title }}">
+                </a>
+                    <h3>{{ movie.title }}</h3>
+                    <p>{{ movie.year }}</p>
+                </div>
+                {% empty %}<p class="fade-in">No movies available.</p>{% endfor %}
+            </div>
+        </section>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="contact-section">
+        <div class="contact-container">
+            <div class="contact-avatar fade-in">
+                <h3 class="logo_title">Contact Me!</h3>
+                <img src="{% static 'image/avatar.png' %}" alt="profile">
+            </div>
+            {% if contact_msg %}
+                <p class="success-message">{{ contact_msg }}</p>
+            {% endif %}
+            <div class="contact-form fade-in">
+                <h3>Inquiry</h3>
+                <form method="post">{% csrf_token %}
+                    {% for field in form %}
+                    <div class="form-group mb-3">
+                        {{ field.label_tag }}{{ field }}
+                        {% if field.errors %}<small class="text-danger">{{ field.errors|striptags }}</small>{% endif %}
+                    </div>
+                    {% endfor %}
+                    <button type="submit" class="btn-submit">Send</button>
+                </form>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer><small>&copy; puffin</small></footer>
+
+<script>
+    // Hamburger toggle
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('nav-links');
+    hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        navLinks.classList.toggle('active');
+    });
+
+    // Animate on scroll
+    function animateOnScroll() {
+        const elements = document.querySelectorAll('.fade-in');
+        const windowHeight = window.innerHeight;
+        elements.forEach(el => {
+            const position = el.getBoundingClientRect().top;
+            if(position < windowHeight - 50){ el.classList.add('animated'); }
+        });
+    }
+    window.addEventListener('scroll', animateOnScroll);
+    window.addEventListener('load', animateOnScroll);
+
+    // Scrollspy
+    const sections = document.querySelectorAll("main > section"); // only top-level sections
+    const navLinksArr = document.querySelectorAll(".nav-links a");
+    window.addEventListener("scroll", () => {
+        let current = "";
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop - 100;
+            const sectionHeight = section.offsetHeight;
+            if(window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight){
+                current = section.getAttribute("id");
+            }
+        });
+        navLinksArr.forEach(link => {
+            link.classList.remove("active");
+            if(link.getAttribute("href") === `#${current}`){ link.classList.add("active"); }
+        });
+    });
+
+    // Auto scroll to home
+    window.addEventListener("load", () => { if (!window.location.hash) window.location = "#home"; });
+</script>
+
+</body>
+</html>

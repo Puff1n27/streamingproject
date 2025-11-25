@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ movie.title }} - Movie Details</title>
+<link rel="stylesheet" href="{% static 'style.css' %}">
+<style>
+body { font-family: 'Segoe UI', sans-serif; background:#000; color:#fff; margin:0; padding:0; }
+.navbar { display:flex; justify-content:space-between; align-items:center; padding:15px 20px; background:#000; position:sticky; top:0; }
+.navbar .logo { font-size:24px; font-weight:bold; }
+.nav-links a { color:#ccc; margin-left:20px; text-decoration:none; }
+.nav-links a:hover { color:#fff; }
+.movie-detail { display:flex; flex-wrap:wrap; justify-content:center; align-items:flex-start; gap:40px; padding:50px 20px; }
+.movie-poster { flex:1 1 300px; max-width:400px; }
+.movie-poster img { width:100%; border-radius:15px; box-shadow:0 0 30px rgba(255,255,255,0.2); }
+.movie-info { flex:1 1 300px; max-width:600px; }
+.movie-info h1 { font-size:36px; margin-bottom:10px; }
+.movie-info p { font-size:16px; line-height:1.6; margin-bottom:15px; }
+.movie-info .year, .movie-info .genre { font-weight:bold; color:#ff0000; }
+.btn-trailer { display:inline-block; padding:12px 25px; background:#e50914; color:#fff; border-radius:8px; text-decoration:none; font-weight:bold; margin-top:10px; transition:0.3s; }
+.btn-trailer:hover { background:#b20710; }
+@media (max-width:768px) { .movie-detail { flex-direction:column; align-items:center; } }
+</style>
+</head>
+<body>
+
+<header class="navbar">
+<div class="logo">STREAMING</div>
+<nav class="nav-links">
+<a href="{% url 'movie:home' %}">Home</a>
+<a href="{% url 'movie:home' %}">All Movies</a>
+<a href="{% url 'logout' %}">Log Out</a>
+</nav>
+</header>
+
+<main>
+<section class="movie-detail">
+<div class="movie-poster">
+<img src="{{ movie.poster.url }}" alt="{{ movie.title }}">
+</div>
+<div class="movie-info">
+<h1>{{ movie.title }}</h1>
+<p class="year">Year: {{ movie.year }}</p>
+<p>{{ movie.description }}</p>
+{% if movie.link %}
+<a href="{{ movie.link }}" target="_blank" class="btn-trailer">Watch / Stream</a>
+{% endif %}
+</div>
+</section>
+</main>
+
+<footer style="text-align:center; padding:20px; background:#000; color:#ccc;">
+&copy; puffin
+</footer>
+
+</body>
+</html>

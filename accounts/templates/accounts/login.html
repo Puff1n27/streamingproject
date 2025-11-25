@@ -1,0 +1,39 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log In</title>
+    <link rel="stylesheet" href="{% static 'form.css' %}">
+</head>
+<body>
+    <section class=log_in>
+    <h2>Login</h2>
+    {% if messages %}
+    <div style="margin: 10px 0;">
+        {% for message in messages %}
+            <div style="
+                padding: 10px;
+                background: rgba(0,255,0,0.2);
+                color: #0f0;
+                border: 1px solid #0f0;
+                margin-bottom: 8px;
+                border-radius: 5px;">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Login</button>
+        </form>
+
+    <p>Don't have an account?
+        <a href="{% url 'signup' %}">Signup</a>
+    </p>
+    </section>
+</body>
+</html>

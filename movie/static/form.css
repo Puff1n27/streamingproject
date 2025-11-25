@@ -1,0 +1,155 @@
+/* === Background Gradient === */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+
+    background: linear-gradient(135deg, #000, #1a1a1a, #000);
+    background-attachment: fixed;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: white;
+}
+
+/* === Transparent Glass Box === */
+.log_in, .sign_up {
+    width: 380px;
+    padding: 40px;
+    background: transparent;
+    backdrop-filter: blur(100px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+
+    text-align: center;
+
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+.helptext {
+    display: none !important;
+}
+
+/* Headings */
+h2 {
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+}
+
+/* Form Inputs */
+form p {
+    text-align: left;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 16px;
+
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: white;
+
+    outline: none;
+}
+
+input:focus {
+    border-color: #ffffff;
+}
+
+/* Buttons */
+button {
+    width: 100%;
+    padding: 12px;
+    background: #e50914; /* Netflix red */
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #b20710;
+}
+
+/* Links */
+p a {
+    color: #1db954;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+p a:hover {
+    text-decoration: underline;
+}
+
+/* Fade animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* === Responsive Design === */
+@media (max-width: 1024px) {
+    .log_in, .sign_up {
+        width: 320px;
+        padding: 30px;
+    }
+
+    h2 {
+        font-size: 22px;
+    }
+
+    input, button {
+        padding: 10px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        flex-direction: column;
+        padding: 20px;
+        min-height: 100vh;
+    }
+
+    .log_in, .sign_up {
+        width: 100%;
+        max-width: 350px;
+        padding: 25px;
+        margin: 10px 0;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    input, button {
+        padding: 10px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .log_in, .sign_up {
+        width: 100%;
+        padding: 20px;
+        border-radius: 12px;
+    }
+
+    h2 {
+        font-size: 18px;
+    }
+
+    input, button {
+        padding: 8px;
+        font-size: 13px;
+    }
+}
